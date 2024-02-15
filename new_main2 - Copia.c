@@ -23,12 +23,12 @@ typedef struct {
 
 typedef struct {
     // (pos_x1, pos_y1)
-    int pos_x1;    // Ponto superior esquerdo
-    int pos_y1;    // Ponto superior esquerdo
+    int pos_x1;    // Ponto inferior esquerdo
+    int pos_y1;    // Ponto inferior esquerdo
 
     // (pos_x2, pos_y2)
-    int pos_x2;    // Ponto inferior direito
-    int pos_y2;    // Ponto inferior direito
+    int pos_x2;    // Ponto superior direito
+    int pos_y2;    // Ponto superior direito
 
     //
     int existe;
@@ -130,17 +130,16 @@ void acelBolaBarra(Barra *bar, Bola *ball) {
 }
 
 void acelBolaBloco(Bloco *brick, Bola *ball) {
-    if (((*ball).pos_y-1) == (*brick).pos_y2){
+    if (((*ball).pos_y-1) == (*brick).pos_y1){
         //Batida inferior
         (*ball).vel[1] = 1; 
-    } else if(((*ball).pos_y + 2) == (*brick).pos_y1){
+    } else if((*ball).pos_y == (*brick).pos_y2){
         //Batida superior
         (*ball).vel[1] = -1;
     } else if((*ball).pos_x == (*brick).pos_x2){
         //Batida na direita
         (*ball).vel[0] = 1;
-    }else if(((*ball).pos_x + 2) == (*brick).pos_x1){
-	//Batida na esquerda
+    }else if(((*ball).pos_x + 1) == (*brick).pos_x1){
         (*ball).vel[0] = -1;
     }
 }
@@ -214,9 +213,9 @@ int main(){
     
     int cont = 1;
     vetor[0].pos_x1 = 1;
-    vetor[0].pos_y1 = 1;
+    vetor[0].pos_y1 = 11;
     vetor[0].pos_x2 = 31;
-    vetor[0].pos_y2 = 11;
+    vetor[0].pos_y2 = 1;
     vetor[0].existe = 1;
     vetor[0].color = video_color[1];
     
@@ -226,7 +225,7 @@ int main(){
         vetor[i].pos_x1 = vetor[i-1].pos_x2 + 2;
         vetor[i].pos_y1 = vetor[i-1].pos_y1;
         vetor[i].pos_x2 = vetor[i].pos_x1 + comprimento;
-        vetor[i].pos_y2 = vetor[i].pos_y1 + altura;
+        vetor[i].pos_y2 = vetor[i].pos_y1 - altura;
         vetor[i].existe = 1;
         vetor[i].color = video_color[1];
         
@@ -235,8 +234,8 @@ int main(){
         if (cont == 11){
          	cont = 0;
          	vetor[i].pos_x1 = vetor[0].pos_x1;
-         	vetor[i].pos_y1 = i + 3;
-		vetor[i].pos_y2 = vetor[i].pos_y1 + altura;
+         	vetor[i].pos_y2 = i + 3;
+		vetor[i].pos_y1 = vetor[i].pos_y2 + altura;
 		vetor[i].pos_x2 = vetor[i].pos_x1 + comprimento;
         	vetor[i].existe = 1;
         	vetor[i].color = video_color[1];
@@ -245,9 +244,9 @@ int main(){
     }
 
     int limite_x1= 1; //Pra bola não entrar na linha
-    int limite_y1= 1;
+    int limite_y1= 238;
     int limite_x2= 318;
-    int limite_y2= 238;
+    int limite_y2= 1;
 
     //video_show();// Exibe
 
@@ -274,17 +273,19 @@ int main(){
             bola.vel[0] = 1;
         } else if((bola.pos_x + 1) >= limite_x2){
             bola.vel[0] = -1;
-        } else if((bola.pos_y) <= limite_y1){
+        } else if((bola.pos_y - 1) <= limite_y2){
             bola.vel[1] = 1;
-        } else if((bola.pos_y + 1) >= limite_y2){
-	    //PERDEU F
+        } else if(bola.pos_y >= limite_y1){
+            //PERDEU F
         } 
 
         for (i = 0; i < numBlocos; i++){
             if(vetor[i].existe){
 
-                if (((bola.pos_x >= (vetor[i].pos_x1) && bola.pos_x <= (vetor[i].pos_x2)) && 
-                (bola.pos_y >= (vetor[i].pos_y1) && bola.pos_y <= (vetor[i].pos_y2)))){
+                if (((bola.pos_x >= (vetor[i].pos_x1 - 1) && bola.pos_x <= (vetor[i].pos_x2 + 1)) && 
+                (bola.pos_y >= (vetor[i].pos_y1 - 1) && bola.pos_y <= (vetor[i].pos_y2 + 1))) ||
+                (((bola.pos_x + 1) >= (vetor[i].pos_x1 - 1) && (bola.pos_x + 1) <= (vetor[i].pos_x2 + 1)) && 
+                ((bola.pos_y - 1) >= (vetor[i].pos_y1 - 1) && (bola.pos_y - 1) <= (vetor[i].pos_y2 + 1)))){
                     //Houve colisão com o bloco
                     vetor[i].existe = 0; //Bloco deixa de existir
                     acelBolaBloco(&vetor[i], &bola); //Bola muda de direção

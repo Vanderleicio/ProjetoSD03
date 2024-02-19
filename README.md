@@ -15,12 +15,12 @@
 
 ### Sumário 
 + [Introdução](#introdução)
-+ &nbsp;&nbsp;&nbsp;[Materiais Utilizados](#materiais-utilizados)
-+ + &nbsp;&nbsp;&nbsp;[Softwares Utilizados](#Softwares-utilizados)
++ [Materiais Utilizados](#materiais-utilizados)
++ &nbsp;&nbsp;&nbsp;[Softwares Utilizados](#Softwares-utilizados)
 + [Características da Solução](#características-da-solução)
-+ + [Lógica do Jogo](#lógica-do-jogo)
-+ + [Telas de Exibição](#telas-de-exibição)
-+ + [Controles](#controles)
++ &nbsp;&nbsp;&nbsp;[Lógica do Jogo](#lógica-do-jogo)
++ &nbsp;&nbsp;&nbsp;[Telas de Exibição](#telas-de-exibição)
++ &nbsp;&nbsp;&nbsp;[Controles](#controles)
 + [Como Executar](#como-executar)
 + [Testes](#Testes)
 + [Conclusões](#conclusões)

@@ -18,6 +18,7 @@
 + [Materiais Utilizados](#materiais-utilizados)
 + &nbsp;&nbsp;&nbsp;[Softwares Utilizados](#Softwares-utilizados)
 + [Características da Solução](#características-da-solução)
++ &nbsp;&nbsp;&nbsp;[Drivers](#drivers)
 + &nbsp;&nbsp;&nbsp;[Lógica do Jogo](#lógica-do-jogo)
 + &nbsp;&nbsp;&nbsp;[Telas de Exibição](#telas-de-exibição)
 + &nbsp;&nbsp;&nbsp;[Controles](#controles)

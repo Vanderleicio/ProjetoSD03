@@ -84,10 +84,7 @@ void build_cage(Tela *tela, unsigned color){
 */
 void update_pos_Barra(Barra *barra, Tela *tela){
     int ac_ready, ac_tap, ac_dtap, x_val, y_val, z_val, mgper;
-    // Apaga a posição anterior antes de atualizar (NÃO PRECISA MAIS)
-    //erase_pos_Barra_previous((*barra).pos_x1, (*barra).pos_x2);
 
-    // Realiza a leitura do acelerômetro
     accel_read(&ac_ready, &ac_tap, &ac_dtap, &x_val, &y_val, &z_val, &mgper);
     // Faz a calibragem para reduzir o valor e utilizar diretamente como movimento da barra
 	x_val = x_val/12;
@@ -114,43 +111,51 @@ void update_pos_Barra(Barra *barra, Tela *tela){
 void acelBolaBarra(Barra *bar, Bola *ball) {
     int lado = ((*bar).width/2) - 2;
     
-    if (((*ball).pos_x >= (*bar).pos_x1) && ((*ball).pos_x <= (*bar).pos_x1 + lado - 1)){
+      
+    
+    // para ball.pos_X = 1 e bar.pos_X1 = 1 Entre 1 e 18
+    if (((*ball).pos_x >= (*bar).pos_x1) && ((*ball).pos_x <= (*bar).pos_x1 + lado)){
         (*ball).vel[0] = -1;
         (*ball).vel[1] = -1;
-    } else if (((*ball).pos_x >= (*bar).pos_x1 + lado) && ((*ball).pos_x <= (*bar).pos_x1 + lado + 3)){
+    } else if (((*ball).pos_x >= (*bar).pos_x1 + lado+1) && ((*ball).pos_x <= (*bar).pos_x1 + lado + 4)){ // entre 19 e 23
         (*ball).vel[0] = 0;
         (*ball).vel[1] = -1;
-    } else if (((*ball).pos_x >= (*bar).pos_x2 - lado + 1) && ((*ball).pos_x <= (*bar).pos_x2)){
+    } else if (((*ball).pos_x >= (*bar).pos_x1 + lado + 5) && ((*ball).pos_x <= (*bar).pos_x2)){ // entre 23 e 39
         (*ball).vel[0] = 1;
-        (*ball).vel[1] = -1;
+        (*ball).vel[1] = -1;					
+    } else {
+    	char msg[50];
+    	sprintf(msg, "X: %d", (*ball).pos_x);
+    	video_text (0, 0,msg); // Adicionado agora 
     }
 }
 
 // -------- --------- -------- QUE TIPO DE MONSTRUOSIDADE É ESTA? -------- --------- -------- //
 void acelBolaBloco(Bloco *brick, Bola *ball) {
-    if (((*ball).pos_y) == (*brick).pos_y2){
+     if (((*ball).pos_y) == (*brick).pos_y2){
         //Batida inferior
         (*ball).vel[1] = 1; 
+        //(*brick).existe = 0;
     } else if(((*ball).pos_y + 1) == (*brick).pos_y1){
         //Batida superior
         (*ball).vel[1] = -1;
-    } else if((*ball).pos_x == (*brick).pos_x2){
+        //(*brick).existe = 0;
+    }
+    
+    else if((*ball).pos_x == (*brick).pos_x2){
         //Batida na direita
         (*ball).vel[0] = 1;
+        //(*brick).existe = 0;
     }else if(((*ball).pos_x + 1) == (*brick).pos_x1){
 		//Batida na esquerda
+	//(*brick).existe = 0;
         (*ball).vel[0] = -1;
     } else{
     	printf("Desconhecido");
     }
 }
 
-
-/* Atualiza a posição da bola, no buffer, com base em sua velocidade. 
-    Param:
-        - bola -> Objeto Bola
-*/
-void update_pos_Bola(Bola *bola){
+update_pos_Bola(Bola *bola){
     (*bola).pos_x = (*bola).pos_x + (*bola).vel[0];
     (*bola).pos_y = ((*bola).pos_y + (*bola).vel[1]);
     // Escreve no buffer
@@ -166,7 +171,7 @@ int main(){
     Tela tela;//Ok
     Bola bola;
     Barra barra;//Ok
-    
+    int blocos_destruidos;
     int numBlocos = 40;// 10 blocos por linha e 4 linhas 
     int comprimento = 30; //Tamanho X do bloco
     int altura = 10; //Tamanho Y do bloco
@@ -247,10 +252,10 @@ int main(){
     }
 
     // ::::: ??????????????????? :::::MUDAR PARA CALCULOS ENVOLVENDO O TELA. //
-    int limite_x1= 1; //Pra bola não entrar na linha
-    int limite_y1= 1;
-    int limite_x2= 318;
-    int limite_y2= 238;
+    //int limite_x1= 1; //Pra bola não entrar na linha
+    //int limite_y1= 1;
+    //int limite_x2= tela.screen_x - 2;// 318
+    //int limite_y2= tela.screen_y - 2;// 238
     // ::::: ??????????????????? ::::: //
 
 	/// Deixa o jogo travado no inicio até que pressione o botão da esquerda
@@ -260,8 +265,7 @@ int main(){
 		KEY_read (&botao_valor);
 	}
 	video_erase();
-
-
+    blocos_destruidos = 0;
     // Loop principal do jogo
     while (1){
         // Veriifico se pressionou o botão de pausar
@@ -279,16 +283,16 @@ int main(){
     	
     	// --- --- Realiza as movimentações necessárias --- --- //
         update_pos_Bola(&bola);
-	    update_pos_Barra(&barra, &tela);
+	update_pos_Barra(&barra, &tela);
 	
         // --- --- Verifico se a bola chocou com a gaiola ou perdeu  --- --- //
-        if (bola.pos_x <= limite_x1){
+        if (bola.pos_x <= 1){// Pq considero a espessura da gaiola
             bola.vel[0] = 1;
-        } else if((bola.pos_x + 1) >= limite_x2){
+        } else if((bola.pos_x + 1) >= tela.screen_x - 2){
             bola.vel[0] = -1;
-        } else if((bola.pos_y) <= limite_y1){
+        } else if((bola.pos_y) <= 1){ // Pq considero a espessura da gaiola
             bola.vel[1] = 1;
-        } else if((bola.pos_y + 1) >= limite_y2){
+        } else if((bola.pos_y + 1) >= tela.screen_y - 2){
 	    	// --- --- TELA DE FIM DE JOGO E REINICIAR --- --- //
 			video_text (tela.char_x/3 - 6, tela.char_y/2 - 4, "FIM DE JOGO");
 			video_text (tela.char_x/3 - 6, tela.char_y/2, "Pressione o botao Iniciar para reiniciar");
@@ -360,28 +364,37 @@ int main(){
 				 }
 				 
 			}
+			blocos_destruidos = 0;
         }
         ///===========================================================================================
-
+	
         // Trecho que escreve os blocos
         for (i = 0; i < numBlocos; i++){
             //printf("Bloco: %i, X1:%i, Y1:%i, X2:%i, Y2:%i \n", i, vetor[i].pos_x1, vetor[i].pos_y1, vetor[i].pos_x2, vetor[i].pos_y2);
             if(vetor[i].existe){
-				
+		// O PROBLEMA ESTÁ AQUI !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
                 if (((bola.pos_x >= (vetor[i].pos_x1) && bola.pos_x <= (vetor[i].pos_x2)) && 
                 (bola.pos_y >= (vetor[i].pos_y1) && bola.pos_y <= (vetor[i].pos_y2))) || 
                 (((bola.pos_x + 1) >= (vetor[i].pos_x1) && (bola.pos_x+1) <= (vetor[i].pos_x2)) && 
                 ((bola.pos_y + 1) >= (vetor[i].pos_y1) && (bola.pos_y+1) <= (vetor[i].pos_y2))) ){
                     //Houve colisão com o bloco
+                    blocos_destruidos = blocos_destruidos + 1;
                     vetor[i].existe = 0; //Bloco deixa de existir
                     acelBolaBloco(&vetor[i], &bola); //Bola muda de direção
                 }
                 video_box(vetor[i].pos_x1,vetor[i].pos_y1,vetor[i].pos_x2,vetor[i].pos_y2,vetor[i].color);
             }
         }
-
+        
+        if (blocos_destruidos == numBlocos){
+        	video_text (tela.char_x/2, tela.char_y/2, "Venceu o jogo!!");
+        	break;
+        }
+	
+	// Verifico colisão com a barra
         if (bola.pos_x >= barra.pos_x1 && bola.pos_x <= barra.pos_x2 && (bola.pos_y+1) == barra.pos_y){
             acelBolaBarra(&barra, &bola);
+            printf("%i",bola.pos_y +1);
         }
 
         video_show();

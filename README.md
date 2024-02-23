@@ -123,6 +123,25 @@ O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlad
 
 ## Lógica do Jogo
 
+Para criar a lógica do jogo, começamos definindo um conjunto de estruturas que representam os elementos fundamentais do jogo: a tela, a bola, os blocos e a barra. Cada estrutura é recebe os atributos específicos necessários, informações dos pontos que definem sua posição, vetores responsáveis por realizar a movimentação, são alguns desses atributos.
+
+Uma vez que as estruturas estão instanciadas, inicializamos os drivers relevantes utilizando a funcionalidade "open()" disponibilizada por cada um deles. Isso nos permite estabelecer a comunicação e interação adequadas com os periféricos do hardware, como a tela e os controles de entrada.
+
+Após obter os dados sobre o tamanho da tela, procedemos à construção dos objetos. Isso inclui a criação da gaiola limitadora, da barra e dos blocos dispostos na parte superior da tela. O objetivo principal do jogo é quebrar todos os blocos, enquanto se evita que a bola atravesse a parte inferior da tela. Para isso, o jogador controla a barra utilizando o acelerômetro, movendo-a horizontalmente para rebater a bola e mantê-la em jogo. Essa dinâmica define o desafio central e a mecânica básica do jogo.
+
+- #### Colisão e movimentação
+  Para movimentar a barra, aproveitamos o acelerômetro 3D disponível na placa.   Esse sensor nos fornece valores para os eixos x, y e z, porém, para nossa aplicação, nos concentramos apenas no valor de x. Para garantir uma movimentação responsiva, dividimos o valor de x recebido do acelerômetro por 12. Assim, se a barra estiver dentro dos limites da gaiola, adicionamos o valor resultante (x/12) à posição atual da barra. Isso proporciona uma movimentação suave e controlada.
+
+  A estrutura da bola inclui uma lista de inteiros com tamanho 2, que funcionam como vetores de direção, representando as alterações nas posições x e y da bola, respectivamente.
+  Para movimentar a bola, simplesmente atribuímos valores positivos ou negativos a cada elemento da lista, indicando a direção do movimento.
+  
+  O sistema de colisão é baseado nesse formato. Para detectar colisões com os blocos, verificamos se a posição da bola está dentro das coordenadas (x1, y1) e (x2, y2) de um determinado bloco. Se estiver, isso indica uma colisão. Em seguida, determinamos o tipo de colisão (esquerda, direita, superior ou inferior) para ajustar os valores na lista. Por exemplo, se houver uma colisão inferior, significa que a bola está se movendo de baixo para cima, então precisamos alterar o valor de y para fazer a bola refletir na direção oposta.
+  A lógica de colisão segue um padrão semelhante para a barra e a gaiola, permitindo que o jogo reaja de forma adequada às interações entre os elementos, garantindo uma experiência de jogo envolvente e desafiadora.
+
+
+
+
+
 ## Testes
 
 ## Conclusões

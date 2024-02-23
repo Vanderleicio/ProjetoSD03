@@ -88,46 +88,45 @@ Entretanto, a distribuição Linux utilizada oferece diversos módulos pré-cons
 
 
   ### Driver vídeo
-
-O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlador VGA, que possibilita a conexão com um monitor. Este monitor suporta uma resolução de tela de até 640x480 pixels. A imagem exibida na saída de vídeo é derivada de duas fontes principais: um buffer de pixels e um buffer de caracteres. Esses buffers servem como armazenamento temporário para os dados de imagem que serão exibidos na tela.
-
-##### Buffer de pixel
-
-O buffer de pixel armazena os dados de cor de cada pixel que será exibido no monitor. Para desenhar uma imagem na tela, é necessário acessar cada pixel, o que é feito combinando o endereço base do buffer de pixels com as coordenadas de cada pixel, determinadas pelos pares ordenados (x, y). No sistema de coordenadas, o canto superior esquerdo da tela corresponde à localização (0, 0).
-
-Dessa forma, podemos calcular o endereço de memória de cada pixel na tela e escrever os valores de cores correspondentes nesses endereços. O controlador de buffer de pixel lê esses dados para verificar se eles podem ser exibidos na tela. No entanto, essa abordagem permite que o usuário altere o buffer de pixel enquanto o conteúdo ainda está sendo exibido, o que pode causar artefatos visuais indesejados. Para evitar isso, utilizamos o conceito de buffer duplo.
-
-O buffer duplo emprega dois registradores de buffer: um para o buffer que está sendo exibido atualmente e outro para o "backbuffer". Na prática, o buffer de pixel apontado pelo registrador de buffer é exibido na tela, enquanto o "backbuffer" recebe o desenho de uma nova imagem. Quando o último pixel do buffer atual é exibido, ocorre uma troca: a nova imagem é exibida e o buffer que já foi exibido agora é apontado pelo registrador de "backbuffer", enquanto o buffer atual é limpo e está pronto para receber uma nova imagem a ser desenhada. 
-
-##### Buffer de caracteres 
-
-O buffer de caracteres armazena os dados que representam os caracteres a serem exibidos na tela. Os caracteres são armazenados em blocos utilizando seus códigos ASCII. Quando esses códigos de caracteres são exibidos no monitor, o buffer de caracteres automaticamente gera o padrão correspondente de pixels para cada caractere usando uma fonte integrada.
-
-De forma semelhante ao buffer de pixel, a exibição dos caracteres na tela ocorre através de uma combinação de endereço base e deslocamento, permitindo o acesso a cada local na tela.
-
-
-Essa explicação fornece uma compreensão do funcionamento do módulo de vídeo. Além disso, ao disponibilizar funções de "open" e "close" para abertura e fechamento do dispositivo VGA, além do seu mapeamento, o driver de vídeo concentra-se no controle e na exibição de informações no monitor
-
-- #### video_read()
-A funcionalidade video read serve para obter informações sobre o tamanho do monitor, e sobre a o tamanho do texto;
-
-
-- #### video_box()
- Essa funcionalidade desenha um retângulo preenchido no monitor. A explicação também se aplica a outra funcionalidade utilizada no desenvolvimento, chamada "video_line", que opera de maneira semelhante, alterando somente a quantidade de parâmetros recebidos.
-
-A função recebe informações sobre dois pontos que formam os cantos do retângulo, bem como a cor que o retângulo deve conter. Para manipular a cor dos pixels dentro do retângulo, trabalhamos com o endereçamento, utilizando os pontos passados como parâmetros para inserir o valor da cor desejada nos endereços correspondentes dos pixels.
-
-Os valores passados como parâmetro, representando os pontos (x1, y1) e (x2, y2), são utilizados para calcular os endereços dos pixels. Isso é feito adicionando os valores binários de x1 e y1 ao endereço base, resultando no endereço específico do pixel na tela. Essa abordagem permite controlar e definir a cor de cada pixel dentro do retângulo, possibilitando a criação de formas geométricas preenchidas de maneira eficiente e precisa.
-- #### video_text()
-
-A função video_text recebe a posição x e y, juntamente com o caractere que será escrito na tela. A lógica por trás da escrita de texto é bastante semelhante à do buffer de pixels, pois requer a obtenção do endereço onde os caracteres serão armazenados.
-
-Para determinar o endereço do caractere na posição, somamos o endereço base do buffer de caracteres com os valores binários de (x, y). Essa soma resulta no endereço da localização de escrita na memória do buffer de caracteres.
-
-Os caracteres são armazenados utilizando códigos ASCII. Quando esses códigos são exibidos no monitor, o buffer de caracteres gera automaticamente o padrão correspondente de pixels para cada caractere, utilizando uma fonte integrada. Isso permite uma representação visual precisa e legível do texto na tela do monitor.
- 
-- #### video_show()
-    Essa funcionalidade desempenha um papel crucial na alternância entre os buffers do VGA. Sempre que a função "video_show" é chamada, ocorre a troca entre os buffers de pixel. Essa troca é realizada após a exibição completa de uma imagem na tela. Na prática, a função "video_show" exibe a nova imagem desenhada no antigo "backbuffer", que agora se torna o buffer de pixel ativo.
+    O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlador VGA, que possibilita a conexão com um monitor. Este monitor suporta uma resolução de tela de até 640x480 pixels. A imagem exibida na saída de vídeo é derivada de duas fontes principais: um buffer de pixels e um buffer de caracteres. Esses buffers servem como armazenamento temporário para os dados de imagem que serão exibidos na tela.
+    
+    ##### Buffer de pixel
+    
+    O buffer de pixel armazena os dados de cor de cada pixel que será exibido no monitor. Para desenhar uma imagem na tela, é necessário acessar cada pixel, o que é feito combinando o endereço base do buffer de pixels com as coordenadas de cada pixel, determinadas pelos pares ordenados (x, y). No sistema de coordenadas, o canto superior esquerdo da tela corresponde à localização (0, 0).
+    
+    Dessa forma, podemos calcular o endereço de memória de cada pixel na tela e escrever os valores de cores correspondentes nesses endereços. O controlador de buffer de pixel lê esses dados para verificar se eles podem ser exibidos na tela. No entanto, essa abordagem permite que o usuário altere o buffer de pixel enquanto o conteúdo ainda está sendo exibido, o que pode causar artefatos visuais indesejados. Para evitar isso, utilizamos o conceito de buffer duplo.
+    
+    O buffer duplo emprega dois registradores de buffer: um para o buffer que está sendo exibido atualmente e outro para o "backbuffer". Na prática, o buffer de pixel apontado pelo registrador de buffer é exibido na tela, enquanto o "backbuffer" recebe o desenho de uma nova imagem. Quando o último pixel do buffer atual é exibido, ocorre uma troca: a nova imagem é exibida e o buffer que já foi exibido agora é apontado pelo registrador de "backbuffer", enquanto o buffer atual é limpo e está pronto para receber uma nova imagem a ser desenhada. 
+    
+    ##### Buffer de caracteres 
+    
+    O buffer de caracteres armazena os dados que representam os caracteres a serem exibidos na tela. Os caracteres são armazenados em blocos utilizando seus códigos ASCII. Quando esses códigos de caracteres são exibidos no monitor, o buffer de caracteres automaticamente gera o padrão correspondente de pixels para cada caractere usando uma fonte integrada.
+    
+    De forma semelhante ao buffer de pixel, a exibição dos caracteres na tela ocorre através de uma combinação de endereço base e deslocamento, permitindo o acesso a cada local na tela.
+    
+    
+    Essa explicação fornece uma compreensão do funcionamento do módulo de vídeo. Além disso, ao disponibilizar funções de "open" e "close" para abertura e fechamento do dispositivo VGA, além do seu mapeamento, o driver de vídeo concentra-se no controle e na exibição de informações no monitor
+    
+    - #### video_read()
+    A funcionalidade video read serve para obter informações sobre o tamanho do monitor, e sobre a o tamanho do texto;
+    
+    
+    - #### video_box()
+     Essa funcionalidade desenha um retângulo preenchido no monitor. A explicação também se aplica a outra funcionalidade utilizada no desenvolvimento, chamada "video_line", que opera de maneira semelhante, alterando somente a quantidade de parâmetros recebidos.
+    
+    A função recebe informações sobre dois pontos que formam os cantos do retângulo, bem como a cor que o retângulo deve conter. Para manipular a cor dos pixels dentro do retângulo, trabalhamos com o endereçamento, utilizando os pontos passados como parâmetros para inserir o valor da cor desejada nos endereços correspondentes dos pixels.
+    
+    Os valores passados como parâmetro, representando os pontos (x1, y1) e (x2, y2), são utilizados para calcular os endereços dos pixels. Isso é feito adicionando os valores binários de x1 e y1 ao endereço base, resultando no endereço específico do pixel na tela. Essa abordagem permite controlar e definir a cor de cada pixel dentro do retângulo, possibilitando a criação de formas geométricas preenchidas de maneira eficiente e precisa.
+    - #### video_text()
+    
+    A função video_text recebe a posição x e y, juntamente com o caractere que será escrito na tela. A lógica por trás da escrita de texto é bastante semelhante à do buffer de pixels, pois requer a obtenção do endereço onde os caracteres serão armazenados.
+    
+    Para determinar o endereço do caractere na posição, somamos o endereço base do buffer de caracteres com os valores binários de (x, y). Essa soma resulta no endereço da localização de escrita na memória do buffer de caracteres.
+    
+    Os caracteres são armazenados utilizando códigos ASCII. Quando esses códigos são exibidos no monitor, o buffer de caracteres gera automaticamente o padrão correspondente de pixels para cada caractere, utilizando uma fonte integrada. Isso permite uma representação visual precisa e legível do texto na tela do monitor.
+     
+    - #### video_show()
+        Essa funcionalidade desempenha um papel crucial na alternância entre os buffers do VGA. Sempre que a função "video_show" é chamada, ocorre a troca entre os buffers de pixel. Essa troca é realizada após a exibição completa de uma imagem na tela. Na prática, a função "video_show" exibe a nova imagem desenhada no antigo "backbuffer", que agora se torna o buffer de pixel ativo.
 
 
   ### Driver accel

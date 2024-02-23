@@ -121,6 +121,27 @@ O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlad
 
 ### Driver accel
 
+Esse driver é responsável pelo controle sobre o acelerômetro que está disponível na placa, o acelerômetro realiza a leitura fornece medições de aceleração nos eixos, x, y, z. O sensor presente na placa é o ADXL345, utilizando uma comunicação através de um barramento serial I2c. Os fios I2C são roteados atráves do bloco pin mux, que pode ser utilizado para passar os sinais ao controlador I2C0, para um controlador GPIO ou para FPGA.
+
+Nesse caso, precisamos que ADXL345 compartilhe os dados com o controlador, pois ele que ficará responsável por intermediar e realizar o controle sobre as informações de dados que são passados pelo acelerômetro. Para realizar a comunicação deve haver uma configuração inicial sobre o controlador I2C0, para que possa ficar estabelecido que o mesmo quer operar em cima do sensor ADXL345.
+
+Para isso uma serie de configurações acontece, primeiramente a conexão entre os fios, que deve ser configurada para realizar a comunicação com o ADXL345, configurar o modo de operação do controlador, e também configurações especificas de clock para comunicação. Após essa conexão torna-se possível ler e gravar dados dos registradores internos do ADXL345.
+
+Depois de realizar a comunicação dos fios, e o controlador já estiver configurado, podemos então utilizar os registradores que estão mapeados para a memória virtual, para ler e gravar os registros internos do ADXL345, como já vimos anteriormente, a utiliziação dos endereços e funções de mais "baixo nível" são abstraidas pela utilização dos drivers. 
+
+Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tanto do sensor como do controlador, utilizamos as funções *open*, *calibrate*.
+
+- #### accel_init()
+  Realiza a inicialização do controlador I2C0 como do sensor ADXL345, essa função é responsável por realizar as configurações adequadas ao controlador e ao sensor para que seja possível ao controlador ter acesso as informações do sensor.
+
+- #### accel_read()
+  A função read recebe referências que apontarão para os valores determinados em cada eixo (x, y, z), essa função acessa os registradores de dados presentes no acelerômetro, anteriormente mapeados, lendo o valor presente nos seis registros data do sensor ADXL345 e definindo esse valor como o valor das referências.
+
+- #### accel_format()
+
+- #### accel_range()
+
+
 ## Lógica do Jogo
 
 Para criar a lógica do jogo, começamos definindo um conjunto de estruturas que representam os elementos fundamentais do jogo: a tela, a bola, os blocos e a barra. Cada estrutura é recebe os atributos específicos necessários, informações dos pontos que definem sua posição, vetores responsáveis por realizar a movimentação, são alguns desses atributos.

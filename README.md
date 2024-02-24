@@ -16,6 +16,7 @@
 ### Sumário 
 + [Introdução](#introdução)
 + [Materiais Utilizados](#materiais-utilizados)
++ &nbsp;&nbsp;&nbsp;[Hardware Utilizado](#hardware-utilizado)
 + &nbsp;&nbsp;&nbsp;[Softwares Utilizados](#Softwares-utilizados)
 + [Características da Solução](#características-da-solução)
 + &nbsp;&nbsp;&nbsp;[Drivers](#drivers)
@@ -40,6 +41,18 @@ Este projeto visa desenvolver um código em linguagem C que englobe tanto a lóg
 
 
 
+## Materiais Utilizados
+
+
+### Hardware Utilizado
+
+- Kit de desenvolvimento `DE1-SoC`.
+
+
+### Softwares Utilizados
+
+- Linguagem de Programação C.
+
 ## Características da Solução
 
 Podemos dividir o desenvolvimento em três módulos distintos: a lógica de jogo, a criação, exibição e manipulação de telas, e o controle. É crucial ressaltar que, em todas as etapas, a utilização dos drivers de dispositivos desempenhou um papel fundamental. Ao empregar esses drivers, foi possível abstrair muitas complexidades associadas ao acesso direto aos endereços físicos das portas do hardware.
@@ -61,8 +74,8 @@ Entretanto, a distribuição Linux utilizada oferece diversos módulos pré-cons
 |-------------|-------------|
 | KEY | Usado para acessar a porta KEY do botão |
 | SW | Usada para acessar a porta SW do interruptor deslizante |
-| LEDR | Usadao para acessar a porta LEDR |
-| HEX | Usado para acesar a porta HEX de sete segmentos |
+| LEDR | Usado para acessar a porta LEDR |
+| HEX | Usado para acessar a porta HEX de sete segmentos |
 | video | Usado para acessar a porta de saída de video VGA |
 | audio | Usado para acessar a porta de áudio digital |
 | accel | Usado para acessar a porta do acelerômetro 3D |
@@ -79,17 +92,13 @@ Entretanto, a distribuição Linux utilizada oferece diversos módulos pré-cons
   O módulo KEY, é utilizado para operar sobre os *pushbuttons* que estão presentes na placa. Esse módulo possue três funcionalidades principais.
 
   - #### open
-    Essa funcionalidade é utilizada para realizar a abertura do dispostivo */dev/mem*, essa função também realiza a chamada de sistema *memmap* que realiza o mapeamento da memória física para memória virtual.
+    Essa funcionalidade é utilizada para realizar a abertura do dispositivo */dev/mem*, essa função também realiza a chamada de sistema *memmap* que realiza o mapeamento da memória física para memória virtual.
   - #### read
     Após realizar o mapeamento e acessar os registradores da porta KEY, a função recebe um parâmetro ponteiro que aponta para um inteiro, que é utilizado para retornar o estado do botão. Temos quatro botões na placa, caso o usuário selecione o botão mais a esquerda, o valor do parâmetro é igual a 8, caso não receba nada o valor é 0. 
   - #### close
     Essa funcionalidade fecha o arquivo */dev/mem* que da acesso aos endereços físicos.
-
-
-
-  ### Driver vídeo
-
-O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlador VGA, que possibilita a conexão com um monitor. Este monitor suporta uma resolução de tela de até 640x480 pixels. A imagem exibida na saída de vídeo é derivada de duas fontes principais: um buffer de pixels e um buffer de caracteres. Esses buffers servem como armazenamento temporário para os dados de imagem que serão exibidos na tela.
+  - #### Driver vídeo
+    O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlador VGA, que possibilita a conexão com um monitor. Este monitor suporta uma resolução de tela de até 640x480 pixels. A imagem exibida na saída de vídeo é derivada de duas fontes principais: um buffer de pixels e um buffer de caracteres. Esses buffers servem como armazenamento temporário para os dados de imagem que serão exibidos na tela.
 
 ##### Buffer de pixel
   O buffer de pixel armazena os dados de cor de cada pixel que será exibido no monitor. Para desenhar uma imagem na tela, é necessário acessar cada pixel, o que é feito combinando o endereço base do buffer de pixels com as coordenadas de cada pixel, determinadas pelos pares ordenados (x, y). No sistema de coordenadas, o canto superior esquerdo da tela corresponde à localização (0, 0).
@@ -121,13 +130,13 @@ O computador DE1-SoC possui uma porta de saída de vídeo conectada ao controlad
 
 ### Driver accel
 
-Esse driver é responsável pelo controle sobre o acelerômetro que está disponível na placa, o acelerômetro realiza a leitura fornece medições de aceleração nos eixos, x, y, z. O sensor presente na placa é o ADXL345, utilizando uma comunicação através de um barramento serial I2c. Os fios I2C são roteados atráves do bloco pin mux, que pode ser utilizado para passar os sinais ao controlador I2C0, para um controlador GPIO ou para FPGA.
+Esse driver é responsável pelo controle sobre o acelerômetro que está disponível na placa, o acelerômetro realiza a leitura fornece medições de aceleração nos eixos, x, y, z. O sensor presente na placa é o ADXL345, utilizando uma comunicação através de um barramento serial I2c. Os fios I2C são roteados através do bloco pin mux, que pode ser utilizado para passar os sinais ao controlador I2C0, para um controlador GPIO ou para FPGA.
 
 Nesse caso, precisamos que ADXL345 compartilhe os dados com o controlador, pois ele que ficará responsável por intermediar e realizar o controle sobre as informações de dados que são passados pelo acelerômetro. Para realizar a comunicação deve haver uma configuração inicial sobre o controlador I2C0, para que possa ficar estabelecido que o mesmo quer operar em cima do sensor ADXL345.
 
 Para isso uma serie de configurações acontece, primeiramente a conexão entre os fios, que deve ser configurada para realizar a comunicação com o ADXL345, configurar o modo de operação do controlador, e também configurações especificas de clock para comunicação. Após essa conexão torna-se possível ler e gravar dados dos registradores internos do ADXL345.
 
-Depois de realizar a comunicação dos fios, e o controlador já estiver configurado, podemos então utilizar os registradores que estão mapeados para a memória virtual, para ler e gravar os registros internos do ADXL345, como já vimos anteriormente, a utiliziação dos endereços e funções de mais "baixo nível" são abstraidas pela utilização dos drivers. 
+Depois de realizar a comunicação dos fios, e o controlador já estiver configurado, podemos então utilizar os registradores que estão mapeados para a memória virtual, para ler e gravar os registros internos do ADXL345, como já vimos anteriormente, a utilização dos endereços e funções de mais "baixo nível" são abstraídas pela utilização dos drivers. 
 
 Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tanto do sensor como do controlador, utilizamos as funções *open*, *calibrate*.
 
@@ -144,11 +153,11 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
 
 ## Lógica do Jogo
 
-Para criar a lógica do jogo, começamos definindo um conjunto de estruturas que representam os elementos fundamentais do jogo: a tela, a bola, os blocos e a barra. Cada estrutura é recebe os atributos específicos necessários, informações dos pontos que definem sua posição, vetores responsáveis por realizar a movimentação, são alguns desses atributos.
+  Para criar a lógica do jogo, começamos definindo um conjunto de estruturas que representam os elementos fundamentais do jogo: a tela, a bola, os blocos e a barra. Cada estrutura é recebe os atributos específicos necessários, informações dos pontos que definem sua posição, vetores responsáveis por realizar a movimentação, são alguns desses atributos.
 
-Uma vez que as estruturas estão instanciadas, inicializamos os drivers relevantes utilizando a funcionalidade "open()" disponibilizada por cada um deles. Isso nos permite estabelecer a comunicação e interação adequadas com os periféricos do hardware, como a tela e os controles de entrada.
+  Uma vez que as estruturas estão instanciadas, inicializamos os drivers relevantes utilizando a funcionalidade "open()" disponibilizada por cada um deles. Isso nos permite estabelecer a comunicação e interação adequadas com os periféricos do hardware, como a tela e os controles de entrada.
 
-Após obter os dados sobre o tamanho da tela, procedemos à construção dos objetos. Isso inclui a criação da gaiola limitadora, da barra e dos blocos dispostos na parte superior da tela. O objetivo principal do jogo é quebrar todos os blocos, enquanto se evita que a bola atravesse a parte inferior da tela. Para isso, o jogador controla a barra utilizando o acelerômetro, movendo-a horizontalmente para rebater a bola e mantê-la em jogo. Essa dinâmica define o desafio central e a mecânica básica do jogo.
+  Após obter os dados sobre o tamanho da tela, procedemos à construção dos objetos. Isso inclui a criação da gaiola limitadora, da barra e dos blocos dispostos na parte superior da tela. O objetivo principal do jogo é quebrar todos os blocos, enquanto se evita que a bola atravesse a parte inferior da tela. Para isso, o jogador controla a barra utilizando o acelerômetro, movendo-a horizontalmente para rebater a bola e mantê-la em jogo. Essa dinâmica define o desafio central e a mecânica básica do jogo.
 
 - #### Colisão e movimentação
   Para movimentar a barra, aproveitamos o acelerômetro 3D disponível na placa.   Esse sensor nos fornece valores para os eixos x, y e z, porém, para nossa aplicação, nos concentramos apenas no valor de x. Para garantir uma movimentação responsiva, dividimos o valor de x recebido do acelerômetro por 12. Assim, se a barra estiver dentro dos limites da gaiola, adicionamos o valor resultante (x/12) à posição atual da barra. Isso proporciona uma movimentação suave e controlada.
@@ -159,18 +168,50 @@ Após obter os dados sobre o tamanho da tela, procedemos à construção dos obj
   O sistema de colisão é baseado nesse formato. Para detectar colisões com os blocos, verificamos se a posição da bola está dentro das coordenadas (x1, y1) e (x2, y2) de um determinado bloco. Se estiver, isso indica uma colisão. Em seguida, determinamos o tipo de colisão (esquerda, direita, superior ou inferior) para ajustar os valores na lista. Por exemplo, se houver uma colisão inferior, significa que a bola está se movendo de baixo para cima, então precisamos alterar o valor de y para fazer a bola refletir na direção oposta.
   A lógica de colisão segue um padrão semelhante para a barra e a gaiola, permitindo que o jogo reaja de forma adequada às interações entre os elementos, garantindo uma experiência de jogo envolvente e desafiadora.
 
+### Telas de Exibição
+#### Iniciar Jogo
+![iniciar_jogo](imagensReadme\esperando_iniciar1.jpg)
+Nesta tela, o jogo espera a entrada de iniciar para começar a partida.
+#### Jogando
+![jogando](imagensReadme\jogando.gif)
+Aqui acontece toda a partida.
+#### Pausado
+![pausar](imagensReadme\pausado1.jpg)
+Tela de pause, aqui o jogo espera a entrada de iniciar para despausar o jogo e continuar a partida.
 
+#### Jogo Encerrado
+![fim_de_jogo](imagensReadme\fim_de_jogo1.jpg)
+Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de reinicio para recomeçar a partida.
 
+#### Vitoria
+Esta tela deixamos como uma surpresa e desafio para você. Será que tu és capaz de ganhar?
+### Controles
 
+![botões](imagensReadme\133201126.webp)
+
+- Lista dos botões e suas funções:
+- **1** - Para iniciar/despausar o jogo.
+- **2** - Para Pausar o jogo.
+- **3** - Para reiniciar o jogo quando perder.
+
+Para controlar a barra, segure a `DE1-SoC` de modo que a saída VGA fique na direção oposta ao seu corpo e simplesmente incline a `DE1-SoC` para a esquerda para mover a barra para a esquerda e incline-a para a direita para mover a barra para a direita.
+
+## Como Executar
+
+### Compilando e executando o jogo
+Ao executar pela primeira vez: execute o arquivo `Makefile` para realizar a compilação do código e executar o jogo.
+
+### Iniciando o jogo novamente
+Toda vez que for iniciar novamente o jogo, somente é necessário executar o arquivo `mainv2.exe` gerado pela compilação. Em caso de perda do `mainv2.exe`, somente execute o arquivo `Makefile` novamente.
 
 ## Testes
 
 ## Conclusões
 
-Podemos concluir que o desenvolvimento do jogo foi bem sucedido, atendendo todos os requisitos solicitados, cumprindo eficientemente com o propósito estabelicido, bem como se divertindo na programação. Pontos como o score, e vidas, podem ser incrementados para tornar um jogo ainda mais fiel ao original.
+Podemos concluir que o desenvolvimento do jogo foi bem sucedido, atendendo todos os requisitos solicitados, cumprindo eficientemente com o propósito estabelecido, bem como se divertindo na programação. Pontos como o score, e vidas, podem ser incrementados para tornar um jogo ainda mais fiel ao original.
 
 
-## Refêrencias
+## Referências
 
 [História do Breakout](https://www.youtube.com/watch?v=bC_KPLe5dYg): Vídeo utilizado como inspiração para a solicitação do desenvolvimento do jogo.
 

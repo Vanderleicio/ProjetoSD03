@@ -169,22 +169,29 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
   A lógica de colisão segue um padrão semelhante para a barra e a gaiola, permitindo que o jogo reaja de forma adequada às interações entre os elementos, garantindo uma experiência de jogo envolvente e desafiadora.
 
 ### Telas de Exibição
-#### Iniciar Jogo
-![iniciar_jogo](imagensReadme\esperando_iniciar1.jpg)
+- #### Iniciar Jogo
+
+<div class="esperando_iniciar"><img src="./imagensReadme/esperando_iniciar1.jpg" alt="startGame">
+
 Nesta tela, o jogo espera a entrada de iniciar para começar a partida.
-#### Jogando
-![jogando](imagensReadme\jogando.gif)
+- #### Jogando
+
+<div class="jogando"><img src="./imagensReadme/jogando.gif" alt="jogando">
+
 Aqui acontece toda a partida.
-#### Pausado
-![pausar](imagensReadme\pausado1.jpg)
+- #### Pausado
+
+<div class="pausado1"><img src="./imagensReadme/pausado1.jpg" alt="pausado1">
+
 Tela de pause, aqui o jogo espera a entrada de iniciar para despausar o jogo e continuar a partida.
 
-#### Jogo Encerrado
-![fim_de_jogo](imagensReadme\fim_de_jogo1.jpg)
+- #### Jogo Encerrado
+
+<div class="fim_de_jogo"><img src="./imagensReadme/fim_de_jogo1.jpg" alt="fim_de_jogo1">
+
+
 Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de reinicio para recomeçar a partida.
 
-#### Vitoria
-Esta tela deixamos como uma surpresa e desafio para você. Será que tu és capaz de ganhar?
 ### Controles
 
 ![botões](imagensReadme\133201126.webp)

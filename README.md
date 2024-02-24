@@ -183,7 +183,7 @@ Tela de pause, aqui o jogo espera a entrada de iniciar para despausar o jogo e c
 ![fim_de_jogo](imagensReadme\fim_de_jogo1.jpg)
 Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de reinicio para recomeçar a partida.
 
-#### Vitoria
+#### Vitória
 Esta tela deixamos como uma surpresa e desafio para você. Será que tu és capaz de ganhar?
 ### Controles
 

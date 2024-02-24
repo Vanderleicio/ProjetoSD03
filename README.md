@@ -171,23 +171,23 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
 ### Telas de Exibição
 - #### Iniciar Jogo
 
-<div class="esperando_iniciar"><img src="./imagensReadme/esperando_iniciar1.jpg" alt="startGame">
+<div class="esperando_iniciar"><img src="./imagensReadme/esperando_iniciar1.jpg" alt="startGame" style="width: 430px; height: 240px;">
 
 Nesta tela, o jogo espera a entrada de iniciar para começar a partida.
 - #### Jogando
 
-<div class="jogando"><img src="./imagensReadme/jogando.gif" alt="jogando">
+<div class="jogando"><img src="./imagensReadme/jogando.gif" alt="jogando" style="width: 430px; height: 240px;">
 
 Aqui acontece toda a partida.
 - #### Pausado
 
-<div class="pausado1"><img src="./imagensReadme/pausado1.jpg" alt="pausado1">
+<div class="pausado1"><img src="./imagensReadme/pausado1.jpg" alt="pausado1" style="width: 430px; height: 240px;">
 
 Tela de pause, aqui o jogo espera a entrada de iniciar para despausar o jogo e continuar a partida.
 
 - #### Jogo Encerrado
 
-<div class="fim_de_jogo"><img src="./imagensReadme/fim_de_jogo1.jpg" alt="fim_de_jogo1">
+<div class="fim_de_jogo"><img src="./imagensReadme/fim_de_jogo1.jpg" alt="fim_de_jogo1" style="width: 430px; height: 240px;">
 
 
 Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de reinicio para recomeçar a partida.
@@ -196,7 +196,8 @@ Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de rei
 Esta tela deixamos como uma surpresa e desafio para você. Será que tu és capaz de ganhar?
 ### Controles
 
-![botões](imagensReadme\133201126.webp)
+<div class="133201126"><img src="./imagensReadme/133201126.webp" alt="133201126" style="width: 430px; height: 240px;">
+
 
 - Lista dos botões e suas funções:
 - **1** - Para iniciar/despausar o jogo.

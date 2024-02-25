@@ -144,11 +144,20 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
   Realiza a inicialização do controlador I2C0 como do sensor ADXL345, essa função é responsável por realizar as configurações adequadas ao controlador e ao sensor para que seja possível ao controlador ter acesso as informações do sensor.
 
 - #### accel_read()
-  A função read recebe referências que apontarão para os valores determinados em cada eixo (x, y, z), essa função acessa os registradores de dados presentes no acelerômetro, anteriormente mapeados, lendo o valor presente nos seis registros data do sensor ADXL345 e definindo esse valor como o valor das referências.
+  A função `read` recebe referências que apontarão para os valores determinados em cada eixo (x, y, z), essa função acessa os registradores de dados presentes no acelerômetro, anteriormente mapeados, lendo o valor presente nos seis registros data do sensor ADXL345 e definindo esse valor como o valor das referências.
+
+- #### accel_calibrate()
+  A função `calibrate` serve para calibrar o eixo x do dispositivo de aceleração na posição atual.
+  Não recebe parâmetros e possui retorno nulo.
 
 - #### accel_format()
+  A função `format` configura o formato dos dados de aceleração.
+  Recebe dois parâmetros:
+  * full: Um valor inteiro que define a resolução total.
+  * range: Define o alcance G, onde G = {2, 4, 8, 16}.
+  
+  Retorno nulo.
 
-- #### accel_range()
 
 
 ## Lógica do Jogo

@@ -156,13 +156,10 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
   * full: Um valor inteiro que define a resolução total.
   * range: Define o alcance G, onde G = {2, 4, 8, 16}.
 
-  Retorno nulo.
 - #### accel_rate()
   Define a taxa de atualização dos dados de aceleração.
   Recebe somente um parâmetro:
   * rate: a taxa de dados em Hz, onde R = {25,12.5,6.25,1.56,0.78}
-
-  Retorno nulo.
 
 ## Lógica do Jogo
 
@@ -181,32 +178,34 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
   O sistema de colisão é baseado nesse formato. Para detectar colisões com os blocos, verificamos se a posição da bola está dentro das coordenadas (x1, y1) e (x2, y2) de um determinado bloco. Se estiver, isso indica uma colisão. Em seguida, determinamos o tipo de colisão (esquerda, direita, superior ou inferior) para ajustar os valores na lista. Por exemplo, se houver uma colisão inferior, significa que a bola está se movendo de baixo para cima, então precisamos alterar o valor de y para fazer a bola refletir na direção oposta.
   A lógica de colisão segue um padrão semelhante para a barra e a gaiola, permitindo que o jogo reaja de forma adequada às interações entre os elementos, garantindo uma experiência de jogo envolvente e desafiadora.
 
-### Telas de Exibição
+### Telas e Testes
+
+Esta seção tem como objetivo apresentar alguns testes conduzidos após o desenvolvimento do jogo, bem como exibir as telas resultantes geradas por esses testes.
 - #### Iniciar Jogo
 
 <div class="esperando_iniciar"><img src="./imagensReadme/esperando_iniciar1.jpg" alt="startGame" style="width: 430px; height: 240px;">
 
-Nesta tela, o jogo espera a entrada de iniciar para começar a partida.
+esta tela, o jogo aguarda a interação do usuário, que pode iniciar o jogo através do primeiro botão. Se qualquer outro botão for pressionado, o jogo permanece nesta tela.
 - #### Jogando
 
 <div class="jogando"><img src="./imagensReadme/jogando.gif" alt="jogando" style="width: 430px; height: 240px;">
 
-Aqui acontece toda a partida.
+Neste teste, observamos o funcionamento integral da lógica do jogo. Primeiramente, ocorre a colisão da bola com a barra, resultando na reflexão da bola e seu retorno para o lado oposto da tela. Em seguida, testamos outra interação crucial: a destruição de um bloco quando a bola entra em contato com ele. Esse é o princípio fundamental do jogo, onde o objetivo é destruir todos os blocos utilizando a barra para direcionar a bola.
+
 - #### Pausado
 
 <div class="pausado1"><img src="./imagensReadme/pausado1.jpg" alt="pausado1" style="width: 430px; height: 240px;">
 
-Tela de pause, aqui o jogo espera a entrada de iniciar para despausar o jogo e continuar a partida.
+Tela de pause, aqui o jogo espera a entrada de continuar para despausar o jogo e continuar a partida.
 
 - #### Jogo Encerrado
 
 <div class="fim_de_jogo"><img src="./imagensReadme/fim_de_jogo1.jpg" alt="fim_de_jogo1" style="width: 430px; height: 240px;">
 
 
-Tela que aparece quando o jogador deixa a bolinha cair, aguarda a entrada de reinicio para recomeçar a partida.
+Neste teste, avaliamos a funcionalidade que confirma a derrota do jogador. Isso acontece quando a bola ultrapassa o limite inferior da tela. Nesse momento, uma mensagem de derrota é exibida e o usuário é solicitado a reiniciar o jogo.
 
-#### Vitória
-Esta tela deixamos como uma surpresa e desafio para você. Será que tu és capaz de ganhar?
+
 ### Controles
 
 <div class="133201126"><img src="./imagensReadme/133201126.webp" alt="133201126" style="width: 430px; height: 240px;">

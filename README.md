@@ -155,10 +155,14 @@ Nesse caso especifico, para realizar a abertura (mapeamento) e calibração tant
   Recebe dois parâmetros:
   * full: Um valor inteiro que define a resolução total.
   * range: Define o alcance G, onde G = {2, 4, 8, 16}.
-  
+
   Retorno nulo.
+- #### accel_rate()
+  Define a taxa de atualização dos dados de aceleração.
+  Recebe somente um parâmetro:
+  * rate: a taxa de dados em Hz, onde R = {25,12.5,6.25,1.56,0.78}
 
-
+  Retorno nulo.
 
 ## Lógica do Jogo
 
